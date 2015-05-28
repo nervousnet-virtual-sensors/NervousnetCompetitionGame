@@ -3,7 +3,7 @@
 
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Planetary Nervous competition - Light</title>
+    <title>Planetary Nervous competition - Light Sensor</title>
     <script src="libs/justgage/justgage.1.0.1.min.js"></script>
     <script src="libs/justgage/raphael.2.1.0.min.js"></script>
     <script src="libs/jquery-2.1.0.min.js"></script>
@@ -12,23 +12,30 @@
 
 </head>
 
-<body bgcolor="dodgerblue">
+<body bgcolor="dodgerblue" onload="getServerDetails()">
     <div id="main">
-        <h1>Planetary nervous competition using Light Sensors</h1>
-        <div id="start_container">
-            <img id="start" src="images/start.png">
-            <br>start
+        <h1>Planetary Nervous Competition using Light Sensors</h1>
+        <div id="content">
+            <h2>
+            <div id="server_details">
+            </div>
+                </h2>
+            <div id="start_container">
+                <img id="start" src="images/start.png">
+                <br>Start
+            </div>
+            <div id="gauge"></div>
+            <div id="timer_container">
+                <img id="timer" src="images/timer.png">
+                <br> <span>60:00</span>
+            </div>
+            <div class="winningLabel"></div>
         </div>
-        <div id="gauge"></div>
-        <div id="timer_container">
-            <img id="timer" src="images/timer.png">
-            <br> <span>60:00</span>
-        </div>
-        <div class="winningLabel"></div>
     </div>
     <script>
         $("#gauge").css("width", $(window).width() * 0.6);
         $("#gauge").css("height", $(window).width() * 0.6 / 1.25);
+        $("#gauge").css("top", $(window).height() * 0.5);
         $("#timer_container").css("top", $(window).height() * 0.5);
         $("#timer_container").css("right", $(window).width() * 0.085);
         $("#start_container").css("top", $(window).height() * 0.5);
@@ -39,6 +46,8 @@
             value: "",
             valueFontColor: "dodgerblue",
             labelFontColor: "dodgerblue",
+            showInnerShadow: true,
+            shadowOpacity: 1,
             min: 0,
             max: 100,
             value: 50,
@@ -55,7 +64,20 @@
 
         var reset_url = address + ":6060/";
         var data_url = address + ":7171/";
+        var server_details_url = address + ":7272/";
         var end_url = address + ":9090/";
+
+        function getServerDetails() {
+            $.getJSON(server_details_url, function (data) {
+                var SERVER_IP = data;
+
+                var s = document.getElementById("server_details");
+                s.innerHTML = "Server IP: " + SERVER_IP + " <br>Port: 8080";
+            }).error(function () {
+                var s = document.getElementById("server_details");
+                s.innerHTML = "Server not running";
+            });
+        }
 
         function onStartClicked() {
 
@@ -120,7 +142,7 @@
             }
             g.refresh(value);
             var shownSecs = secs % 60;
-            if (shownSecs < 60)
+            if (shownSecs < 600)
                 $("#timer_container span").text(
                     "" + parseInt(secs / 60) + ":0" + shownSecs);
             else
