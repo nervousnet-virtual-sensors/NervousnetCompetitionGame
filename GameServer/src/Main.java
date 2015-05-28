@@ -1,3 +1,4 @@
+import java.net.InetAddress;
 import java.net.ServerSocket;
 
 public class Main {
@@ -12,7 +13,7 @@ public class Main {
 	public static int javascriptPortLight = 7171;	
 	public static int smartphonesPort = 8080;
 	public static int compEndPort = 9090;
-	public static int contestDuration = 60;
+	public static int contestDuration = 30;
 	
 	public static void main(String[] args) throws Exception {									    			
 		

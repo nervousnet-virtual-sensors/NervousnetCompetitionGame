@@ -29,7 +29,7 @@ public class Competition {
 		lastReadings[r.team] = r; 
 		
 		for (int t = 0; t <= 1; t++) {
-			team[t] += sqrt(pow(lastReadings[t].x,2)+pow(lastReadings[t].y,2)+pow(lastReadings[t].z,2));
+			team[t] += sqrt(pow(Math.abs(lastReadings[t].x),2)+pow(Math.abs(lastReadings[t].y),2)+pow(Math.abs(lastReadings[t].z),2));
 		}
 	}
 	
