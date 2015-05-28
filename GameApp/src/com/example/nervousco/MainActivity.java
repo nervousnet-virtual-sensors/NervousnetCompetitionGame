@@ -105,11 +105,11 @@ public class MainActivity extends Activity {
 		Log.d(DEBUG_TAG, "register");
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-		final Sensor sensorAccelerometer = sensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-		final Sensor sensorLight = sensorManager
-				.getDefaultSensor(Sensor.TYPE_LIGHT);
+//		final Sensor sensorAccelerometer = sensorManager
+//				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//
+//		final Sensor sensorLight = sensorManager
+//				.getDefaultSensor(Sensor.TYPE_LIGHT);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -144,8 +144,16 @@ public class MainActivity extends Activity {
 		synchout.setSensorType(sensor);
 		readingTask = new SensorService(synchout, team);
 
-		sensorManager.registerListener(readingTask, sensorAccelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
+		if (sensor == 0) {
+			sensorManager.registerListener(readingTask, sensorManager
+					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_NORMAL);
+		} else {
+			sensorManager.registerListener(readingTask, sensorManager
+					.getDefaultSensor(Sensor.TYPE_LIGHT),
+					SensorManager.SENSOR_DELAY_NORMAL);
+		}
+	
 
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
@@ -159,15 +167,28 @@ public class MainActivity extends Activity {
 					if (tv_sensor != null)
 						if (Integer.valueOf(val) == 0) {
 							tv_sensor.setText("Accelerometer");
-							sensorManager.unregisterListener(readingTask);
+							System.out.println("Unregister Light");
+							sensorManager.unregisterListener(readingTask, sensorManager
+									.getDefaultSensor(Sensor.TYPE_LIGHT));
+							System.out.println("After Unregister Light");
+							sensorManager = null;
+							sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 							sensorManager.registerListener(readingTask,
-									sensorAccelerometer,
+									sensorManager
+									.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 									SensorManager.SENSOR_DELAY_NORMAL);
 						} else {
 							tv_sensor.setText("Light");
-							sensorManager.unregisterListener(readingTask);
+							System.out.println("Unregister Accelerometer");
+							sensorManager.unregisterListener(readingTask, sensorManager
+									.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+							sensorManager = null;
+							sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+							
+							System.out.println("after Unregister Accelerometer");
 							sensorManager.registerListener(readingTask,
-									sensorLight,
+									sensorManager
+									.getDefaultSensor(Sensor.TYPE_LIGHT),
 									SensorManager.SENSOR_DELAY_NORMAL);
 						}
 				}
