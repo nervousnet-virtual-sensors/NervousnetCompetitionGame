@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>Planetary Nervous competition</title>
+<script src="libs/justgage/justgage.1.0.1.min.js"></script>
+<script src="libs/justgage/raphael.2.1.0.min.js"></script>
+<script src="libs/jquery-2.1.0.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Raleway:300'
+	rel='stylesheet' type='text/css'>
+<link href="style.css" type="text/css" rel="stylesheet">
+
+</head>
+<body>
+	<div id="main">
+		<h1>Planetary nervous competition</h1>
+		<div id="start_container">
+			<img id="start" src="images/start.png"><br> start
+		</div>
+		<div id="gauge"></div>
+		<div id="timer_container">
+			<img id="timer" src="images/timer.png"><br> <span>10:00</span>
+		</div>
+		<div class="winningLabel"></div>
+	</div>
+	<script>
+		$("#gauge").css("width", $(window).width() * 0.6);
+		$("#gauge").css("height", $(window).width() * 0.6 / 1.25);
+		$("#timer_container").css("top", $(window).height() * 0.3);
+		$("#timer_container").css("right", $(window).width() * 0.085);
+		$("#start_container").css("top", $(window).height() * 0.3);
+		$("#start_container").css("left", $(window).width() * 0.085);
+
+		var g = new JustGage({
+			id : "gauge",
+			value : "",
+			valueFontColor : "white",
+			labelFontColor : "White",
+			min : 0,
+			max : 100,	
+			value : 50,
+			title : " ",
+			gaugeColor : "#85A137",
+			levelColors : [ '#CE1B21' ]
+		});						
+		var rem_secs = 10;
+		var refresh_rate = 500;
+		var timer;
+
+		var address = "http://nervouscomp.hopper.pw";
+		
+		var reset_url = address+":6060/";
+		var data_url = address+":7070/";
+		var end_url = address+":9090/";
+
+		function onStartClicked() {
+
+			$.getJSON(reset_url, function(data) {
+				g.refresh(50);
+				rem_secs = data;
+
+				console.log("reset");
+
+				$("#start_container").css("opacity", "0.5");
+				//        $("h1").css("color","initial");
+				timer = setInterval(function() {
+					$.getJSON(data_url, updateBar);
+				}, refresh_rate);
+
+				document.getElementById("start_container").removeEventListener(
+						"click", onStartClicked);
+			});
+		}
+
+		function updateBar(value) {
+
+			rem_secs -= refresh_rate / 1000;
+			if (rem_secs <= 0.1) {
+				rem_secs = 0;
+			}
+			secs = Math.ceil(rem_secs);
+
+			if (secs == 0) {
+				clearInterval(timer);
+				if (value < 50) {
+					//team A winning
+					$(".winningLabel").text("A won!");
+					$(".winningLabel").css("color", '#CE1B21');
+				} else if (value == 50) {
+					//tie
+					$(".winningLabel").text("TIE!");
+					$(".winningLabel").css("color", "#F09516");
+				} else {
+					//team B winning
+					$(".winningLabel").text("B won!");
+					$(".winningLabel").css("color", '#85A137');
+				}
+				$("#start_container").css("opacity", "1");
+				document.getElementById("start_container").addEventListener(
+						"click", onStartClicked);				
+				$.getJSON(end_url);
+			} else {
+				if (value < 50) {
+					//team A winning
+					$(".winningLabel").text("A");
+					$(".winningLabel").css("color", '#CE1B21');
+				} else if (value == 50) {
+					//tie
+					$(".winningLabel").text("TIE");
+					$(".winningLabel").css("color", "#F09516");
+				} else {
+					//team B winning
+					$(".winningLabel").text("B");
+					$(".winningLabel").css("color", '#85A137');
+				}
+			}
+			g.refresh(value);
+			var shownSecs = secs % 60;
+			if (shownSecs < 10)
+				$("#timer_container span").text(
+						"" + parseInt(secs / 60) + ":0" + shownSecs);
+			else
+				$("#timer_container span").text(
+						"" + parseInt(secs / 60) + ":" + shownSecs);
+		}
+
+		document.getElementById("start_container").addEventListener("click",
+				onStartClicked);
+	</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="settings"
+        android:title="Settings">
+        
+             <ListPreference
+            android:key="sensorType"
+            android:title="Sensor"                
+            android:entries="@array/sensorTypes"
+    		android:entryValues="@array/sensorValues"
+    		android:defaultValue="0"    	   
+        />    
+
+        <ListPreference
+            android:key="team"
+            android:title="Team"                
+            android:entries="@array/ent"
+    		android:entryValues="@array/entvalues"
+    		android:defaultValue="0"    	   
+        />        	   
+        
+        <EditTextPreference
+            android:key="server"
+            android:title="Server address"
+            android:defaultValue="xx.xx.xx.xx"
+            />
+        
+        <EditTextPreference
+            android:key="port"
+            android:title="Port number"
+            android:defaultValue="8080"
+            />
+        
+        <EditTextPreference
+            android:key="writinginterval"
+            android:title="Writing interval (ms)"
+            android:defaultValue="100"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
