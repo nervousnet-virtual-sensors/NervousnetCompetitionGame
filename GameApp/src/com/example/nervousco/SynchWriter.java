@@ -60,7 +60,7 @@ public class SynchWriter {
 			try {
 				for (Object o : buffer) {
 					out.writeObject(o);
-					// System.out.println(o);
+				    System.out.println("Writing data on time: "+System.currentTimeMillis());
 				}
 				out.flush();
 			} catch (Exception e) {

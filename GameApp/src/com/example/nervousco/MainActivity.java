@@ -143,16 +143,16 @@ public class MainActivity extends Activity {
 
 		synchout = new SynchWriter(address, port, writingInterval);
 		synchout.setSensorType(sensor);
-		readingTask = new SensorService(synchout, team);
+		readingTask = new SensorService(synchout, team, writingInterval);
 
 		if (sensor == 0) {
 			sensorManager.registerListener(readingTask,
 					sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-					SensorManager.SENSOR_DELAY_NORMAL);
+					SensorManager.SENSOR_DELAY_GAME);
 		} else {
 			sensorManager.registerListener(readingTask,
 					sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
-					SensorManager.SENSOR_DELAY_NORMAL);
+					SensorManager.SENSOR_DELAY_GAME);
 		}
 
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -181,7 +181,7 @@ public class MainActivity extends Activity {
 											readingTask,
 											sensorManager
 													.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-											SensorManager.SENSOR_DELAY_NORMAL);
+											SensorManager.SENSOR_DELAY_GAME);
 						} else {
 							tv_sensor.setText("Light");
 							System.out.println("Unregister Accelerometer");
@@ -200,7 +200,7 @@ public class MainActivity extends Activity {
 											readingTask,
 											sensorManager
 													.getDefaultSensor(Sensor.TYPE_LIGHT),
-											SensorManager.SENSOR_DELAY_NORMAL);
+											SensorManager.SENSOR_DELAY_GAME);
 						}
 				}
 
