@@ -22,7 +22,7 @@ public class SynchWriter {
 
 	Timer timer;
 
-	public SynchWriter(String ipAddress, int port, int writingInterval )
+	public SynchWriter(String ipAddress, int port, int writingInterval)
 			throws IOException {
 		this.port = port;
 		this.writingInterval = writingInterval;
@@ -81,11 +81,11 @@ public class SynchWriter {
 
 			if (oos == null) {
 				try {
-					System.out.println("Before Writing to server at "+ipAddress+":"+port);
+					System.out.println("Before Writing to server at "
+							+ ipAddress + ":" + port);
 					@SuppressWarnings("resource")
 					Socket socket = new Socket();
-					socket.connect(new InetSocketAddress(ipAddress, port),
-							1000);
+					socket.connect(new InetSocketAddress(ipAddress, port), 1000);
 					// System.out.println("Writing to server");
 					OutputStream os = new BufferedOutputStream(
 							socket.getOutputStream());

@@ -12,50 +12,53 @@ import com.example.nervousco.LightReading;
 import com.example.nervousco.Reading;
 
 class CompetitionDAO {
-	
+
 	String getDate() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		Date date = new Date();
-		return dateFormat.format(date);		
+		return dateFormat.format(date);
 	}
-	
-	String mkString(Object...objects) {
-		if (objects == null || objects.length == 0) return "";
+
+	String mkString(Object... objects) {
+		if (objects == null || objects.length == 0)
+			return "";
 		String s = "";
-		for (Object o : objects) s += o + " ";
-		return s.substring(0, s.length()-1); 
+		for (Object o : objects)
+			s += o + " ";
+		return s.substring(0, s.length() - 1);
 	}
-	
+
 	public void store(Competition comp) {
 		List<Reading> readings = comp.getReadings();
-		System.out.println(getDate());				
-		File f = new File(getDate());					
-		
+		// System.out.println(getDate());
+		File f = new File(getDate());
+
 		PrintWriter out = null;
-		
+
 		try {
-			
-			f.createNewFile();			
-			
-			out = new PrintWriter(new FileOutputStream(f));			
-			
+
+			f.createNewFile();
+
+			out = new PrintWriter(new FileOutputStream(f));
+
 			for (Reading r : readings) {
-				
-				if(r instanceof AccReading){
+
+				if (r instanceof AccReading) {
 					AccReading ar = (AccReading) r;
-					out.println(mkString(ar.timestamp,ar.team,ar.x,ar.y,ar.z));
-				}else{
+					out.println(mkString(ar.timestamp, ar.team, ar.x, ar.y,
+							ar.z));
+				} else {
 					LightReading ar = (LightReading) r;
-					out.println(mkString(ar.timestamp,ar.team,ar.lightVal));
+					out.println(mkString(ar.timestamp, ar.team, ar.lightVal));
 				}
-				
+
 			}
-		
-		} catch(IOException e) {
+
+		} catch (IOException e) {
 			e.printStackTrace();
 			f.delete();
 		} finally {
-			out.close();			
+			out.close();
 		}
 	}
 }

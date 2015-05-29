@@ -20,23 +20,26 @@ public class SensorService implements SensorEventListener {
 
 	@Override
 	public synchronized void onSensorChanged(SensorEvent event) {
-//		System.out.println("OnSensorChanged called");
-		
-     	if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-//     		 System.out.println("OnSensorChanged called for "+ event.sensor.getName()+"  - "+event.values[0]+", "+event.values[0]+", "+event.values[0]);
+		// System.out.println("OnSensorChanged called");
+
+		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+			// System.out.println("OnSensorChanged called for "+
+			// event.sensor.getName()+"  - "+event.values[0]+", "+event.values[0]+", "+event.values[0]);
 			AccReading reading = new AccReading(event.values[0],
 					event.values[1], event.values[2],
 					System.currentTimeMillis(), team);
 			out.send(reading);
 			Log.d(DEBUG_TAG, reading.toString());
-		} else if(event.sensor.getType() == Sensor.TYPE_LIGHT) {
-//			System.out.println("OnSensorChanged called for "+ event.sensor.getName()+" - "+ event.values[0]);
+		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+			// System.out.println("OnSensorChanged called for "+
+			// event.sensor.getName()+" - "+ event.values[0]);
 			LightReading reading = new LightReading(event.values[0],
 					System.currentTimeMillis(), team);
 			out.send(reading);
 			Log.d(DEBUG_TAG, reading.toString());
-		}else {
-			System.out.println("OnSensorChanged called. But unknown Sensor "+ event.sensor.getName());
+		} else {
+			System.out.println("OnSensorChanged called. But unknown Sensor "
+					+ event.sensor.getName());
 		}
 
 	}

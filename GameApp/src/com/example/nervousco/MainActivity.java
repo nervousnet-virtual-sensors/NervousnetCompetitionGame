@@ -57,12 +57,13 @@ public class MainActivity extends Activity {
 
 		settingsButton = (Button) findViewById(R.id.action_settings);
 		settingsButton.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-		    	Intent intent = new Intent(MainActivity.this, PrefActivity.class);
-		        startActivity(intent);
-		    
-		    }
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this,
+						PrefActivity.class);
+				startActivity(intent);
+
+			}
 		});
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
@@ -105,11 +106,11 @@ public class MainActivity extends Activity {
 		Log.d(DEBUG_TAG, "register");
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-//		final Sensor sensorAccelerometer = sensorManager
-//				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-//
-//		final Sensor sensorLight = sensorManager
-//				.getDefaultSensor(Sensor.TYPE_LIGHT);
+		// final Sensor sensorAccelerometer = sensorManager
+		// .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		//
+		// final Sensor sensorLight = sensorManager
+		// .getDefaultSensor(Sensor.TYPE_LIGHT);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -126,7 +127,7 @@ public class MainActivity extends Activity {
 		String address = sp.getString("server", defaultServer);
 		tv_server.setText(address);
 		int port = Integer.parseInt(sp.getString("port", defaultPort));
-		tv_port.setText(""+port);
+		tv_port.setText("" + port);
 		int team = Integer.parseInt(sp.getString("team", defaultTeam));
 
 		if (team == 0) {
@@ -145,15 +146,14 @@ public class MainActivity extends Activity {
 		readingTask = new SensorService(synchout, team);
 
 		if (sensor == 0) {
-			sensorManager.registerListener(readingTask, sensorManager
-					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+			sensorManager.registerListener(readingTask,
+					sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 					SensorManager.SENSOR_DELAY_NORMAL);
 		} else {
-			sensorManager.registerListener(readingTask, sensorManager
-					.getDefaultSensor(Sensor.TYPE_LIGHT),
+			sensorManager.registerListener(readingTask,
+					sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 					SensorManager.SENSOR_DELAY_NORMAL);
 		}
-	
 
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
@@ -168,28 +168,39 @@ public class MainActivity extends Activity {
 						if (Integer.valueOf(val) == 0) {
 							tv_sensor.setText("Accelerometer");
 							System.out.println("Unregister Light");
-							sensorManager.unregisterListener(readingTask, sensorManager
-									.getDefaultSensor(Sensor.TYPE_LIGHT));
+							sensorManager
+									.unregisterListener(
+											readingTask,
+											sensorManager
+													.getDefaultSensor(Sensor.TYPE_LIGHT));
 							System.out.println("After Unregister Light");
 							sensorManager = null;
 							sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-							sensorManager.registerListener(readingTask,
-									sensorManager
-									.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-									SensorManager.SENSOR_DELAY_NORMAL);
+							sensorManager
+									.registerListener(
+											readingTask,
+											sensorManager
+													.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+											SensorManager.SENSOR_DELAY_NORMAL);
 						} else {
 							tv_sensor.setText("Light");
 							System.out.println("Unregister Accelerometer");
-							sensorManager.unregisterListener(readingTask, sensorManager
-									.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+							sensorManager
+									.unregisterListener(
+											readingTask,
+											sensorManager
+													.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
 							sensorManager = null;
 							sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-							
-							System.out.println("after Unregister Accelerometer");
-							sensorManager.registerListener(readingTask,
-									sensorManager
-									.getDefaultSensor(Sensor.TYPE_LIGHT),
-									SensorManager.SENSOR_DELAY_NORMAL);
+
+							System.out
+									.println("after Unregister Accelerometer");
+							sensorManager
+									.registerListener(
+											readingTask,
+											sensorManager
+													.getDefaultSensor(Sensor.TYPE_LIGHT),
+											SensorManager.SENSOR_DELAY_NORMAL);
 						}
 				}
 

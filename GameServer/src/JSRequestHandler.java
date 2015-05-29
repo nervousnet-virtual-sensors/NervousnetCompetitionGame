@@ -2,48 +2,46 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 class JsRequestHandler implements Runnable {
-	
+
 	private ServerSocket socket;
 	private Competition comp;
- 
+
 	public JsRequestHandler(ServerSocket socket, Competition comp) {
 		this.socket = socket;
 		this.comp = comp;
-	} 
-	
+	}
+
 	@Override
-	public synchronized void run() {						
+	public synchronized void run() {
 		Socket clientSocket = null;
-		
-		try {				
-						
-			while(true) {
-				
+
+		try {
+
+			while (true) {
+
 				clientSocket = socket.accept();
-				
-				int value = (int)Math.round(comp.getScore()*100); 
-				if(value == 50) {
+
+				int value = (int) Math.round(comp.getScore() * 100);
+				if (value == 50) {
 					value = 49;
 				}
-				
-				WriteJSON.sendJSON(
-					clientSocket,
-					value
-				);											
+
+				WriteJSON.sendJSON(clientSocket, value);
 			}
-		} catch (Exception e) {				
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				clientSocket.close();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-	}		
-	
+	}
+
 	static class Data {
-		int value,secs;
+		int value, secs;
+
 		Data(int value, int secs) {
 			this.value = value;
 			this.secs = secs;

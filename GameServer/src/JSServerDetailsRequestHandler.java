@@ -3,44 +3,43 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 class JSServerDetailsRequestHandler implements Runnable {
-	
+
 	private ServerSocket socket;
 	private Competition comp;
- 
+
 	public JSServerDetailsRequestHandler(ServerSocket socket, Competition comp) {
 		this.socket = socket;
 		this.comp = comp;
-	} 
-	
+	}
+
 	@Override
-	public synchronized void run() {						
+	public synchronized void run() {
 		Socket clientSocket = null;
-		
-		try {				
-						
-			while(true) {
-				
+
+		try {
+
+			while (true) {
+
 				clientSocket = socket.accept();
-				
-				InetAddress IP=InetAddress.getLocalHost();
+
+				InetAddress IP = InetAddress.getLocalHost();
 				String serverIP = IP.getHostAddress();
-				WriteJSON.sendJSON(clientSocket,
-						serverIP
-				);											
+				WriteJSON.sendJSON(clientSocket, serverIP);
 			}
-		} catch (Exception e) {				
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				clientSocket.close();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-	}		
-	
+	}
+
 	static class Data {
-		int value,secs;
+		int value, secs;
+
 		Data(int value, int secs) {
 			this.value = value;
 			this.secs = secs;
