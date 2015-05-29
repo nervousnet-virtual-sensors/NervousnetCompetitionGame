@@ -2,7 +2,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 public class Main {
-	
+	public final static String GAME_SERVER_VERSION = "1.0.1";
 	public static String songA = "eye.wav";
 	public static String songB = "life.wav";
 	public static int playDuration = 1;
