@@ -78,7 +78,11 @@ class AccReadingListener implements Runnable {
 				while (true) {
 					// System.out.println("Before reading object");
 					Reading reading = (Reading) in.readObject();
-					if (reading instanceof AccReading) {
+					if (reading instanceof AccReading) { 
+						if(comp.COMPETITION_TYPE == Competition.COMPETITION_TYPE_LIGHT){
+							comp.reset();
+							comp.COMPETITION_TYPE = Competition.COMPETITION_TYPE_ACCELEROMETER;
+						}
 						// AccReading accReading= (AccReading)in.readObject();
 						// System.out.println("VaLues coming from Client ****"+(((AccReading)reading).team
 						// == 0?
@@ -89,6 +93,10 @@ class AccReadingListener implements Runnable {
 						totDelay += delay;
 						nReqs++;
 					} else {
+						if(comp.COMPETITION_TYPE == Competition.COMPETITION_TYPE_ACCELEROMETER){
+							comp.reset();
+							comp.COMPETITION_TYPE = Competition.COMPETITION_TYPE_LIGHT;
+						}
 						// LightReading lightReading =
 						// (LightReading)in.readObject();
 						// System.out.println("VaLues coming from Client ****"+(((LightReading)reading).team

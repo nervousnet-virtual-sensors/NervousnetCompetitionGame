@@ -10,6 +10,11 @@ import com.example.nervousco.Reading;
 
 public class Competition {
 
+	public final static int COMPETITION_TYPE_ACCELEROMETER = 0;
+	public final static int COMPETITION_TYPE_LIGHT= 1;
+	
+	public int COMPETITION_TYPE = COMPETITION_TYPE_ACCELEROMETER;
+	
 	double[] team = new double[] { 0, 0 };
 	ArrayList<Reading> readings = new ArrayList<Reading>();
 	AccReading[] lastReadings = new AccReading[] {
@@ -28,11 +33,18 @@ public class Competition {
 
 		lastReadings[r.team] = r;
 
-		for (int t = 0; t <= 1; t++) {
-			team[t] += sqrt(pow(Math.abs(lastReadings[t].x), 2)
-					+ pow(Math.abs(lastReadings[t].y), 2)
-					+ pow(Math.abs(lastReadings[t].z), 2));
-		}
+		int t = r.team;
+//		for (int t = 0; t <= 1; t++) {
+			team[t] += Math.abs(lastReadings[t].x)
+					+ Math.abs(lastReadings[t].y)
+					+ Math.abs(lastReadings[t].z);
+			
+			System.out.println("Score Team "+t+" - "+team[t]);
+//		}
+		
+		
+		
+		System.out.println("lastReadings");
 	}
 
 	public synchronized void pushReading(LightReading r) {
@@ -40,9 +52,11 @@ public class Competition {
 
 		lastLightReadings[r.team] = r;
 
-		for (int t = 0; t <= 1; t++) {
-			team[t] += sqrt(pow(lastLightReadings[t].lightVal, 2));
-		}
+		int t = r.team;
+//		for (int t = 0; t <= 1; t++) {
+			team[t] += lastLightReadings[t].lightVal;
+			System.out.println("Score Team "+t+" - "+team[t]);
+//		}
 	}
 
 	public synchronized double getScore() {
