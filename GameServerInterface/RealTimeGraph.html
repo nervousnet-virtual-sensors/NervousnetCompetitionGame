@@ -6,12 +6,11 @@
     <title>Planetary Nervous competition - Real Time Graph</title>
     <script src="libs/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="script/smoothie.js"></script>
-    <script type="text/javascript" src="script/server-load.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
     <link href="style.css" type="text/css" rel="stylesheet">
 </head>
 
-<body bgcolor="dodgerblue" onload="getServerDetails(), init()">
+<body bgcolor="dodgerblue" onload="getServerDetails(), initSensor(), getData()">
     <div id="main">
         <h1>Planetary Nervous Competition - Graph</h1>
         <div id="content">
@@ -21,12 +20,8 @@
             </div>
             </h2>
         </div>
-        <canvas id="sensor0" width="700" height="100"></canvas>
+        <canvas id="sensor" width="700" height="100"></canvas>
         <button id='button'>Run / Pause</button>
-
-        <canvas id="sensor1" width="700" height="100"></canvas>
-
-        <button id='button2'>Run / Pause</button>
     </div>
 
 
@@ -38,6 +33,10 @@
         var data_url = address + ":7171/";
         var server_details_url = address + ":7272/";
         var end_url = address + ":9090/";
+
+        var rem_secs = 100;
+        var refresh_rate = 500;
+        var timer;
 
         function getServerDetails() {
             $.getJSON(server_details_url, function (data) {
@@ -51,6 +50,80 @@
             });
         }
 
+        var sensorTimeLine;
+        var sensorDataSets;
+
+        function initSensor() {
+
+            sensorTimeLine =
+                new SmoothieChart({
+                    timestampFormatter: SmoothieChart.timeFormatter,
+                    millisPerPixel: 40,
+                    grid: {
+                        strokeStyle: '#555555',
+                        lineWidth: 1,
+                        millisPerLine: 2000,
+                        verticalSections: 5
+                    }
+                });
+
+            var seriesOptions = [
+                {
+                    strokeStyle: 'rgba(255, 0, 0, 1)',
+                    fillStyle: 'rgba(255, 0, 0, 0.1)',
+                    lineWidth: 3
+    }, {
+                    strokeStyle: 'rgba(0, 255, 0, 1)',
+                    fillStyle: 'rgba(0, 255, 0, 0.1)',
+                    lineWidth: 3
+                }];
+
+            // Initialize an empty TimeSeries for each Sensor.
+            sensorDataSets = [new TimeSeries(), new TimeSeries()];
+            /*
+            var now = new Date().getTime();
+            for (var t = now - 1000 * 50; t <= now; t += 1000) {
+                addRandomValueToDataSets(t, sensorDataSets);
+            }
+             Every second, simulate a new set of readings being taken from each CPU.
+            setInterval(function () {
+                addRandomValueToDataSets(new Date().getTime(), sensorDataSets);
+            }, 1000);*/
+
+            for (var i = 0; i < sensorDataSets.length; i++) {
+                sensorTimeLine.addTimeSeries(sensorDataSets[i], seriesOptions[i]);
+            }
+
+            sensorTimeLine.streamTo(document.getElementById('sensor'), 1000);
+        }
+
+        function addValueToDataSets(time, values) {
+            //dataSets[i].append(time, Math.random());
+            sensorDataSets[0].append(time, values[2]);
+            sensorDataSets[1].append(time, values[1]);
+        }
+
+        function getData() {
+            timer = setInterval(function () {
+                $.getJSON(data_url, updateChart);
+            }, refresh_rate);
+        }
+
+        function updateChart(values) {
+            console.log("updateChart called");
+            addValueToDataSets(new Date().getTime(), values);
+        }
+
+        function stopChart() {
+            sensorTimeLine.stop();
+        }
+
+        function runChart() {
+
+            sensorTimeLine.start();
+        }
+
+
         var isRunning1 = true;
         document.getElementById('button').onclick = function () {
             if (isRunning1)
@@ -59,16 +132,6 @@
                 runChart(0);
 
             isRunning1 = !isRunning1;
-        };
-
-        var isRunning2 = true;
-        document.getElementById('button2').onclick = function () {
-            if (isRunning2)
-                stopChart(1);
-            else
-                runChart(1);
-
-            isRunning2 = !isRunning2;
         };
     </script>
 </body>
