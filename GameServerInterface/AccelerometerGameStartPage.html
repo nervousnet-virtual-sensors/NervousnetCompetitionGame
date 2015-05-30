@@ -7,12 +7,13 @@
     <script src="libs/justgage/justgage.1.0.1.min.js"></script>
     <script src="libs/justgage/raphael.2.1.0.min.js"></script>
     <script src="libs/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="script/smoothie.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
     <link href="style.css" type="text/css" rel="stylesheet">
 
 </head>
 
-<body bgcolor="dodgerblue" onload="getServerDetails()">
+<body bgcolor="dodgerblue" onload="initSensor(),getServerDetails()">
     <div id="main">
         <h1>Planetary Nervous Competition using Accelerometer</h1>
         <div id="content">
@@ -31,6 +32,9 @@
                 <br> <span>30:00</span>
             </div>
             <div class="winningLabel"></div>
+        </div>
+        <div id="graph">
+            <canvas id="sensor" width="800" height="100"></canvas>
         </div>
     </div>
     <script>
@@ -79,11 +83,63 @@
                 s.innerHTML = "Server not running";
             });
         }
+        var sensorTimeLine;
+        var sensorDataSets;
+
+        function initSensor() {
+
+            sensorTimeLine =
+                new SmoothieChart({
+                    timestampFormatter: SmoothieChart.timeFormatter,
+                    millisPerPixel: 40,
+                    grid: {
+                        strokeStyle: '#555555',
+                        lineWidth: 1,
+                        millisPerLine: 2000,
+                        verticalSections: 5
+                    }
+                });
+
+            var seriesOptions = [
+                {
+                    strokeStyle: 'rgba(255, 0, 0, 1)',
+                    fillStyle: 'rgba(255, 0, 0, 0.1)',
+                    lineWidth: 3
+    }, {
+                    strokeStyle: 'rgba(0, 255, 0, 1)',
+                    fillStyle: 'rgba(0, 255, 0, 0.1)',
+                    lineWidth: 3
+                }];
+
+            // Initialize an empty TimeSeries for each Sensor.
+            sensorDataSets = [new TimeSeries(), new TimeSeries()];
+            /*
+            var now = new Date().getTime();
+            for (var t = now - 1000 * 50; t <= now; t += 1000) {
+                addRandomValueToDataSets(t, sensorDataSets);
+            }
+             Every second, simulate a new set of readings being taken from each CPU.
+            setInterval(function () {
+                addRandomValueToDataSets(new Date().getTime(), sensorDataSets);
+            }, 1000);*/
+
+            for (var i = 0; i < sensorDataSets.length; i++) {
+                sensorTimeLine.addTimeSeries(sensorDataSets[i], seriesOptions[i]);
+            }
+
+            sensorTimeLine.streamTo(document.getElementById('sensor'), 1000);
+        }
+
+        function addValueToDataSets(time, values) {
+            //dataSets[i].append(time, Math.random());
+            sensorDataSets[0].append(time, values[2]);
+            sensorDataSets[1].append(time, values[1]);
+        }
 
         function onStartClicked() {
-
+            runChart();
             $.getJSON(reset_url, function (data) {
-                g.refresh(50);
+                g.refresh(100);
                 rem_secs = data;
 
                 console.log("reset");
@@ -93,14 +149,17 @@
                 timer = setInterval(function () {
                     $.getJSON(data_url, updateBar);
                 }, refresh_rate);
-
+                console.log("after reset");
                 document.getElementById("start_container").removeEventListener(
                     "click", onStartClicked);
             });
         }
 
-        function updateBar(value) {
+        function updateBar(values) {
+            console.log("inside updateBar ");
 
+            var value = values[0];
+            addValueToDataSets(new Date().getTime(), values);
             rem_secs -= refresh_rate / 1000;
             if (rem_secs <= 0.1) {
                 rem_secs = 0;
@@ -108,6 +167,7 @@
             secs = Math.ceil(rem_secs);
 
             if (secs == 0) {
+                stopChart();
                 clearInterval(timer);
                 if (value < 50) {
                     //team A winning
@@ -149,6 +209,15 @@
             else
                 $("#timer_container span").text(
                     "" + parseInt(secs / 60) + ":" + shownSecs);
+        }
+
+        function stopChart() {
+            sensorTimeLine.stop();
+        }
+
+        function runChart() {
+
+            sensorTimeLine.start();
         }
 
         document.getElementById("start_container").addEventListener("click",

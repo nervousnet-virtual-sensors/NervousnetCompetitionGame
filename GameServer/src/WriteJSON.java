@@ -7,6 +7,34 @@ import com.google.gson.Gson;
 
 public class WriteJSON {
 
+	public static void sendJSON(Socket socket, Object o, double[] o2) {
+
+		try {
+			Scanner in = new Scanner(socket.getInputStream());
+
+			while (!in.nextLine().isEmpty())
+				;
+
+			PrintWriter out = new PrintWriter(socket.getOutputStream());
+
+			String message = new Gson().toJson(o);
+			String message2 =new Gson().toJson(o2[0]);
+			String message3 =new Gson().toJson(o2[1]);
+			String bothJson = "["+message+","+message2+","+message3+"]";
+			out.println("HTTP/1.0 200 OK");
+			out.println("Content-Type: text/json");
+			out.printf("Content-Length: %d%n", bothJson.length());
+			out.println("Access-Control-Allow-Origin: *");
+			out.println();
+			out.println(bothJson);
+			out.flush();
+
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void sendJSON(Socket socket, Object o) {
 
 		try {

@@ -48,6 +48,7 @@ public class SensorService implements SensorEventListener {
 
 		public synchronized void run() {
 			
+			if(event != null)
 			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 				// System.out.println("OnSensorChanged called for "+
 				// event.sensor.getName()+"  - "+event.values[0]+", "+event.values[0]+", "+event.values[0]);

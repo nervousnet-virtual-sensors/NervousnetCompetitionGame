@@ -26,6 +26,10 @@ public class Competition {
 	public synchronized void reset() {
 		team = new double[] { 0, 0 };
 		readings.clear();
+		lastReadings =  new AccReading[] {
+				new AccReading(0, 0, 0, 0, 0), new AccReading(0, 0, 0, 0, 1) };
+		lastLightReadings = new LightReading[] {
+				new LightReading(0, 0, 0), new LightReading(0, 0, 0) };
 	}
 
 	public synchronized void pushReading(AccReading r) {
@@ -39,12 +43,12 @@ public class Competition {
 					+ Math.abs(lastReadings[t].y)
 					+ Math.abs(lastReadings[t].z);
 			
-			System.out.println("Score Team "+t+" - "+team[t]);
+//			System.out.println("Score Team "+t+" - "+team[t]);
 //		}
 		
 		
 		
-		System.out.println("lastReadings");
+//		System.out.println("lastReadings");
 	}
 
 	public synchronized void pushReading(LightReading r) {
@@ -55,7 +59,7 @@ public class Competition {
 		int t = r.team;
 //		for (int t = 0; t <= 1; t++) {
 			team[t] += lastLightReadings[t].lightVal;
-			System.out.println("Score Team "+t+" - "+team[t]);
+//			System.out.println("Score Team "+t+" - "+team[t]);
 //		}
 	}
 
@@ -64,6 +68,28 @@ public class Competition {
 			return 0.5;
 		}
 		return 0.5 + (team[1] - team[0]) / (team[0] + team[1]) / 2;
+	}
+	
+	public synchronized double[] getLastReadings() {
+		double[] teamScore = new double[] { 0, 0 };
+		if (COMPETITION_TYPE == COMPETITION_TYPE_ACCELEROMETER){
+			
+			for (int t = 0; t <= 1; t++) {
+				teamScore[t] += Math.abs(lastReadings[t].x)
+						+ Math.abs(lastReadings[t].y)
+						+ Math.abs(lastReadings[t].z);
+				System.out.println("Team Score Accel "+teamScore[t]);
+			}
+			
+			
+		}else {
+			for (int t = 0; t <= 1; t++) {
+				teamScore[t] += lastLightReadings[t].lightVal;
+				System.out.println("Team Score Light "+teamScore[t]);
+			}
+			
+		}
+		return teamScore;
 	}
 
 	@SuppressWarnings("unchecked")
