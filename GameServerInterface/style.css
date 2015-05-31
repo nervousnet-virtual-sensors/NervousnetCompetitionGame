@@ -36,6 +36,17 @@ h2 {
     font-size: 2em;
     font-weight: bold;
 }
+.button-container {
+    background: dodgerblue;
+    overflow-y: auto;
+}
+.button-container > a {
+    width: 100px;
+    height: 100px;
+    float: left;
+    background: black;
+    margin: 15px;
+}
 acc-button {
     background-image: url(/images/buttons/ic_acc.png);
     /* 16px x 16px */
