@@ -31,7 +31,9 @@
                 <img id="timer" src="images/timer.png">
                 <br> <span>30:00</span>
             </div>
-            <div class="winningLabel"></div>
+            <div class="winningLabel">
+                <br>
+            </div>
         </div>
         <div id="graph">
             <canvas id="sensor" width="800" height="100"></canvas>
@@ -91,7 +93,7 @@
             sensorTimeLine =
                 new SmoothieChart({
                     timestampFormatter: SmoothieChart.timeFormatter,
-                    millisPerPixel: 40,
+                    millisPerPixel: 50,
                     grid: {
                         strokeStyle: '#555555',
                         lineWidth: 1,
