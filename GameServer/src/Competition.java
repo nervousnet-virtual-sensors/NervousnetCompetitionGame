@@ -71,21 +71,27 @@ public class Competition {
 	}
 	
 	public synchronized double[] getLastReadings() {
-		double[] teamScore = new double[] { 0, 0 };
+		double[] teamScore = new double[] { 0, -0 };
 		if (COMPETITION_TYPE == COMPETITION_TYPE_ACCELEROMETER){
 			
 			for (int t = 0; t <= 1; t++) {
 				teamScore[t] = Math.abs(lastReadings[t].x)
 						+ Math.abs(lastReadings[t].y)
 						+ Math.abs(lastReadings[t].z);
+				
+				if(teamScore[t] == 0)
+					teamScore[t] = -1;
 				System.out.println("Team Score Accel "+teamScore[t]);
 			}
+			
 			
 			
 		}else {
 			for (int t = 0; t <= 1; t++) {
 				teamScore[t] = lastLightReadings[t].lightVal;
-				System.out.println("Team Score Light "+teamScore[t]);
+				if(teamScore[t] == 0)
+					teamScore[t] = -1;
+				System.out.println("Team Score Light "+ (t==0?"GREEN":"RED")+" Score =  "+ teamScore[t]);
 			}
 			
 		}

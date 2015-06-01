@@ -26,7 +26,7 @@ class JsRequestHandler implements Runnable {
 					value = 49;
 				}
 
-				WriteJSON.sendJSON(clientSocket, value, comp.getLastReadings());
+				WriteJSON.sendJSON(clientSocket, value, comp.getLastReadings(), comp.COMPETITION_TYPE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 public class WriteJSON {
 
-	public static void sendJSON(Socket socket, Object o, double[] o2) {
+	public static void sendJSON(Socket socket, Object o, double[] o2, int type) {
 
 		try {
 			Scanner in = new Scanner(socket.getInputStream());
@@ -20,7 +20,8 @@ public class WriteJSON {
 			String message = new Gson().toJson(o);
 			String message2 =new Gson().toJson(o2[0]);
 			String message3 =new Gson().toJson(o2[1]);
-			String bothJson = "["+message+","+message2+","+message3+"]";
+			String message4 =new Gson().toJson(type);
+			String bothJson = "["+message+","+message2+","+message3+","+message4+"]";
 			out.println("HTTP/1.0 200 OK");
 			out.println("Content-Type: text/json");
 			out.printf("Content-Length: %d%n", bothJson.length());

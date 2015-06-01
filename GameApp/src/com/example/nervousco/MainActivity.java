@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
 
 		synchout = new SynchWriter(address, port, writingInterval);
 		synchout.setSensorType(sensor);
-		readingTask = new SensorService(synchout, team, writingInterval);
+		readingTask = new SensorService(synchout, team, writingInterval, this);
 
 		if (sensor == 0) {
 			sensorManager.registerListener(readingTask,

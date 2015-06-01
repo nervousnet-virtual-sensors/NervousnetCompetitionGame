@@ -5,10 +5,12 @@ import java.io.ObjectOutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.provider.Settings.Secure;
 import android.util.Log;
 
 public class SensorService implements SensorEventListener {
@@ -16,13 +18,14 @@ public class SensorService implements SensorEventListener {
 	private SynchWriter out;
 	private int team;
 	private SensorEvent event;
-	private SensorValuePusherTask sensorValuePusherTask = new SensorValuePusherTask();
+	private SensorValuePusherTask sensorValuePusherTask;
 	Timer timer;
 	
-	public SensorService(SynchWriter out, int team, long writingInterval) {
+	public SensorService(SynchWriter out, int team, long writingInterval, Context context) {
 		this.out = out;
 		this.team = team;
 		timer = new Timer();
+		sensorValuePusherTask = new SensorValuePusherTask(context);
 		timer.schedule(sensorValuePusherTask, writingInterval, writingInterval);
 	}
 
@@ -46,6 +49,13 @@ public class SensorService implements SensorEventListener {
 	
 	class SensorValuePusherTask extends TimerTask {
 
+		Context context;
+		
+		public SensorValuePusherTask(Context context){
+			this.context = context;
+		}
+		
+		
 		public synchronized void run() {
 			
 			if(event != null)
@@ -55,6 +65,7 @@ public class SensorService implements SensorEventListener {
 				AccReading reading = new AccReading(event.values[0],
 						event.values[1], event.values[2],
 						System.currentTimeMillis(), team);
+				reading.android_id = UniqueIDHandler.getIMEI(context);
 				out.send(reading);
 				Log.d(DEBUG_TAG, reading.toString());
 			} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
@@ -62,6 +73,7 @@ public class SensorService implements SensorEventListener {
 				// event.sensor.getName()+" - "+ event.values[0]);
 				LightReading reading = new LightReading(event.values[0],
 						System.currentTimeMillis(), team);
+				reading.android_id = UniqueIDHandler.getIMEI(context);
 				out.send(reading);
 				Log.d(DEBUG_TAG, reading.toString());
 			} else {
