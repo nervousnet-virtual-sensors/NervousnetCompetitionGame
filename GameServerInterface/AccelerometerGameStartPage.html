@@ -36,9 +36,13 @@
                 <br>
             </div>
         </div>
-        <div id="graph">
-            <canvas id="sensor" width="800" height="100"></canvas>
-        </div>
+        <canvas id="sensor" width="800" height="100"></canvas>
+        <label style=" font-weight: bold;">Sensor Values</label>
+
+        <br>
+        <label style=" font-weight: bold;">Time</label>
+        <br>
+        <br>
         <br>
         <br>
     </div>
@@ -137,8 +141,11 @@
 
         function addValueToDataSets(time, values) {
             //dataSets[i].append(time, Math.random());
-            sensorDataSets[0].append(time, values[2]);
-            sensorDataSets[1].append(time, values[1]);
+            if (values[3] == 0) {
+
+                sensorDataSets[0].append(time, values[2]);
+                sensorDataSets[1].append(time, values[1]);
+            }
         }
 
         function onStartClicked() {

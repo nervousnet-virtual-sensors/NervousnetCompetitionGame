@@ -16,12 +16,25 @@
         <h3>Real-time Graph</h3>
         <div id="content">
             <h2>
+                
             <div id="server_details">
+                <br><br>
+            </div>
+
+                <div id="sensor_type">
                 <br><br>
             </div>
             </h2>
         </div>
-        <canvas id="sensor" width="700" height="100"></canvas>
+        <canvas id="sensor" width="800" height="100"></canvas>
+        <label style=" font-weight: bold;">Sensor Values</label>
+
+        <br>
+        <label style=" font-weight: bold;">Time</label>
+        <br>
+        <br>
+        <br>
+        <br>
         <button id='button'>Run / Pause</button>
     </div>
 
@@ -44,10 +57,10 @@
                 var SERVER_IP = data;
 
                 var s = document.getElementById("server_details");
-                s.innerHTML = "Server IP: " + SERVER_IP + " <br>Port: 8080";
+                s.innerHTML = "Server IP: " + SERVER_IP + " <br>Port: 8080<br><br>";
             }).error(function () {
                 var s = document.getElementById("server_details");
-                s.innerHTML = "Server not running";
+                s.innerHTML = "Server not running <br><br>";
             });
         }
 
@@ -59,11 +72,10 @@
             sensorTimeLine =
                 new SmoothieChart({
                     timestampFormatter: SmoothieChart.timeFormatter,
-                    millisPerPixel: 40,
                     grid: {
                         strokeStyle: '#555555',
                         lineWidth: 1,
-                        millisPerLine: 2000,
+                        millisPerLine: 250,
                         verticalSections: 5
                     }
                 });
@@ -99,9 +111,20 @@
         }
 
         function addValueToDataSets(time, values) {
-            //dataSets[i].append(time, Math.random());
-            sensorDataSets[0].append(time, values[2]);
-            sensorDataSets[1].append(time, values[1]);
+
+            var s = document.getElementById("sensor_type");
+
+            if (values[3] == 0)
+                s.innerHTML = "Accelerometer<br><br>";
+            else
+                s.innerHTML = "Light<br><br>";
+
+
+            if (values[2] >= 0)
+                sensorDataSets[0].append(time, values[2]);
+
+            if (values[1] >= 0)
+                sensorDataSets[1].append(time, values[1]);
         }
 
         function getData() {
