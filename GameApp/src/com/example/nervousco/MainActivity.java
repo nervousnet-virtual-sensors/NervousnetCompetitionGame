@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 	public static String defaultSensor = "0";
 
 	TextView tv_team, tv_server, tv_port, tv_sensor;
-	Button settingsButton;
+//	Button settingsButton;
 
 	WakeLock wakeLock;
 	WifiLock wifiLock;
@@ -55,16 +55,16 @@ public class MainActivity extends Activity {
 		tv_server = (TextView) findViewById(R.id.tv_server);
 		tv_port = (TextView) findViewById(R.id.tv_port);
 
-		settingsButton = (Button) findViewById(R.id.action_settings);
-		settingsButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this,
-						PrefActivity.class);
-				startActivity(intent);
-
-			}
-		});
+//		settingsButton = (Button) findViewById(R.id.action_settings);
+//		settingsButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent(MainActivity.this,
+//						PrefActivity.class);
+//				startActivity(intent);
+//
+//			}
+//		});
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
 		wakeLock.acquire();
@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
 
 		synchout = new SynchWriter(address, port, writingInterval);
 		synchout.setSensorType(sensor);
-		readingTask = new SensorService(synchout, team, writingInterval, this);
+		readingTask = new SensorService(synchout, team, writingInterval, MainActivity.this);
 
 		if (sensor == 0) {
 			sensorManager.registerListener(readingTask,
