@@ -75,7 +75,7 @@ public class Competition {
 		if (COMPETITION_TYPE == COMPETITION_TYPE_ACCELEROMETER){
 			
 			for (int t = 0; t <= 1; t++) {
-				teamScore[t] += Math.abs(lastReadings[t].x)
+				teamScore[t] = Math.abs(lastReadings[t].x)
 						+ Math.abs(lastReadings[t].y)
 						+ Math.abs(lastReadings[t].z);
 				System.out.println("Team Score Accel "+teamScore[t]);
@@ -84,7 +84,7 @@ public class Competition {
 			
 		}else {
 			for (int t = 0; t <= 1; t++) {
-				teamScore[t] += lastLightReadings[t].lightVal;
+				teamScore[t] = lastLightReadings[t].lightVal;
 				System.out.println("Team Score Light "+teamScore[t]);
 			}
 			

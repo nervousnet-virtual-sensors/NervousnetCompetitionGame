@@ -15,7 +15,8 @@
 
 <body bgcolor="dodgerblue" onload="initSensor(),getServerDetails()">
     <div id="main">
-        <h1>Planetary Nervous Competition using Accelerometer</h1>
+        <h1><b>Planetary Nervous Competition</b></h1>
+        <h3>Accelerometer Sensor</h3>
         <div id="content">
             <h2>
             <div id="server_details">
@@ -29,7 +30,7 @@
             <div id="gauge"></div>
             <div id="timer_container">
                 <img id="timer" src="images/timer.png">
-                <br> <span>30:00</span>
+                <br> <span>00:30</span>
             </div>
             <div class="winningLabel">
                 <br>
@@ -38,6 +39,8 @@
         <div id="graph">
             <canvas id="sensor" width="800" height="100"></canvas>
         </div>
+        <br>
+        <br>
     </div>
     <script>
         $("#gauge").css("width", $(window).width() * 0.6);
@@ -62,8 +65,8 @@
             gaugeColor: "#00FF00",
             levelColors: ['#FF0000'],
         });
-        var rem_secs = 100;
-        var refresh_rate = 500;
+        var rem_secs = 30;
+        var refresh_rate = 1000;
         var timer;
 
         /* var address = "http://nervouscomp.hopper.pw"; */
@@ -205,7 +208,7 @@
             }
             g.refresh(value);
             var shownSecs = secs % 60;
-            if (shownSecs < 600)
+            if (shownSecs < 10)
                 $("#timer_container span").text(
                     "" + parseInt(secs / 60) + ":0" + shownSecs);
             else
