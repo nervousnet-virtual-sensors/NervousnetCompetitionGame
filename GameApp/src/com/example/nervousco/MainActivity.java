@@ -166,14 +166,12 @@ public class MainActivity extends Activity {
 
 					if (tv_sensor != null)
 						if (Integer.valueOf(val) == 0) {
-							tv_sensor.setText("Accelerometer");
-							System.out.println("Unregister Light");
-							sensorManager
+							tv_sensor.setText("Accelerometer");							sensorManager
 									.unregisterListener(
 											readingTask,
 											sensorManager
 													.getDefaultSensor(Sensor.TYPE_LIGHT));
-							System.out.println("After Unregister Light");
+							
 							sensorManager = null;
 							sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 							sensorManager
@@ -184,7 +182,6 @@ public class MainActivity extends Activity {
 											SensorManager.SENSOR_DELAY_GAME);
 						} else {
 							tv_sensor.setText("Light");
-							System.out.println("Unregister Accelerometer");
 							sensorManager
 									.unregisterListener(
 											readingTask,
@@ -193,8 +190,6 @@ public class MainActivity extends Activity {
 							sensorManager = null;
 							sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-							System.out
-									.println("after Unregister Accelerometer");
 							sensorManager
 									.registerListener(
 											readingTask,
@@ -230,7 +225,7 @@ public class MainActivity extends Activity {
 					synchout.setWritingInterval(Integer.valueOf(val));
 				}
 
-				System.out.println("Setting: " + key + ", Value = " + val);
+//				System.out.println("Setting: " + key + ", Value = " + val);
 			}
 		};
 

@@ -77,8 +77,8 @@ public class SensorService implements SensorEventListener {
 				out.send(reading);
 				Log.d(DEBUG_TAG, reading.toString());
 			} else {
-				System.out.println("OnSensorChanged called. But unknown Sensor "
-						+ event.sensor.getName());
+//				System.out.println("OnSensorChanged called. But unknown Sensor "
+//						+ event.sensor.getName());
 			}
 		}
 		

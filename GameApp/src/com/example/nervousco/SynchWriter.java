@@ -60,7 +60,7 @@ public class SynchWriter {
 			try {
 				for (Object o : buffer) {
 					out.writeObject(o);
-				    System.out.println("Writing data on time: "+System.currentTimeMillis());
+//				    System.out.println("Writing data on time: "+System.currentTimeMillis());
 				}
 				out.flush();
 			} catch (Exception e) {
@@ -81,8 +81,8 @@ public class SynchWriter {
 
 			if (oos == null) {
 				try {
-					System.out.println("Before Writing to server at "
-							+ ipAddress + ":" + port);
+//					System.out.println("Before Writing to server at "
+//							+ ipAddress + ":" + port);
 					@SuppressWarnings("resource")
 					Socket socket = new Socket();
 					socket.connect(new InetSocketAddress(ipAddress, port), 1000);
