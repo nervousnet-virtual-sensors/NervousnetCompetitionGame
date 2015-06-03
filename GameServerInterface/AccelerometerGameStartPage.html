@@ -152,6 +152,11 @@
             }
         }
 
+        function clearGraphValues() {
+            sensorDataSets[0].clear();
+            sensorDataSets[1].clear();
+        }
+
         function onStartClicked() {
 
             runChart();
@@ -230,6 +235,7 @@
 
         function stopChart() {
             sensorTimeLine.stop();
+            clearGraphValues();
         }
 
         function runChart() {

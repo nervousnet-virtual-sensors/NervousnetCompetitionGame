@@ -151,6 +151,14 @@
             }
         }
 
+        function clearGraphValues() {
+            sensorDataSets[0].clear();
+            sensorDataSets[1].clear();
+        }
+
+
+        var gameRunning = false;
+
         function onStartClicked() {
             runChart();
             $.getJSON(reset_url, function (data) {
@@ -228,10 +236,10 @@
 
         function stopChart() {
             sensorTimeLine.stop();
+            clearGraphValues();
         }
 
         function runChart() {
-
             sensorTimeLine.start();
         }
         document.getElementById("start_container").addEventListener("click",
