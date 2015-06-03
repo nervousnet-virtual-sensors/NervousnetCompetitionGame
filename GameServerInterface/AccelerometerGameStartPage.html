@@ -96,16 +96,20 @@
         var sensorDataSets;
 
         function initSensor() {
-
             sensorTimeLine =
                 new SmoothieChart({
                     timestampFormatter: SmoothieChart.timeFormatter,
-                    millisPerPixel: 50,
+                    millisPerPixel: 30,
                     grid: {
                         strokeStyle: '#555555',
                         lineWidth: 1,
-                        millisPerLine: 2000,
+                        millisPerLine: 5000,
                         verticalSections: 10
+                    },
+                    labels: {
+                        fillStyle: 'rgba(255,255,255,0.62)',
+                        fontSize: 20,
+                        precision: 4
                     }
                 });
 
@@ -149,6 +153,7 @@
         }
 
         function onStartClicked() {
+
             runChart();
             $.getJSON(reset_url, function (data) {
                 g.refresh(100);
@@ -228,7 +233,6 @@
         }
 
         function runChart() {
-
             sensorTimeLine.start();
         }
 
