@@ -50,12 +50,12 @@ public class Competition {
 		if (r.team == 0) {
 			hUniquePlayersGreenTeam.put(r.android_id, r);
 
-			if (hUniquePlayersRedTeam.contains(r.android_id))
+			if (hUniquePlayersRedTeam.containsKey(r.android_id))
 				hUniquePlayersRedTeam.remove(r.android_id);
 		} else {
 			hUniquePlayersRedTeam.put(r.android_id, r);
 
-			if (hUniquePlayersGreenTeam.contains(r.android_id))
+			if (hUniquePlayersGreenTeam.containsKey(r.android_id))
 				hUniquePlayersGreenTeam.remove(r.android_id);
 		}
 
@@ -79,12 +79,12 @@ public class Competition {
 		if (r.team == 0) {
 			hUniquePlayersGreenTeam.put(r.android_id, r);
 
-			if (hUniquePlayersRedTeam.contains(r.android_id))
+			if (hUniquePlayersRedTeam.containsKey(r.android_id))
 				hUniquePlayersRedTeam.remove(r.android_id);
 		} else {
 			hUniquePlayersRedTeam.put(r.android_id, r);
 
-			if (hUniquePlayersGreenTeam.contains(r.android_id))
+			if (hUniquePlayersGreenTeam.containsKey(r.android_id))
 				hUniquePlayersGreenTeam.remove(r.android_id);
 		}
 		
