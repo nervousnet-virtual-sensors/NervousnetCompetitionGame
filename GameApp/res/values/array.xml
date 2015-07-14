@@ -4,12 +4,14 @@
     	<string-array name="sensorTypes">	        
 		<item>Accelerometer</item>		
 		<item>Light</item>	
+		<item>Noise</item>	
 	</string-array>
 		
 	<string-array
 	    name="sensorValues">
 	    <item>0</item>
 	    <item>1</item>	    
+	     <item>2</item>	  
 	</string-array>
     
     <string-array name="ent">	        

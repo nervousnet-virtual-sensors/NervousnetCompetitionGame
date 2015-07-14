@@ -5,8 +5,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-import com.example.nervousco.AccReading;
-
+import ch.ethz.soms.nervous.competition.model.AccReading;
+import ch.ethz.soms.nervous.competition.model.LightReading;
+import ch.ethz.soms.nervous.competition.model.NoiseReading;
+import ch.ethz.soms.nervous.competition.model.Reading;
 public class IntegrationTest {
 
 	public static String ip = "127.0.0.1";

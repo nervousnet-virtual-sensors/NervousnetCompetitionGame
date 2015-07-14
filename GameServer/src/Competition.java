@@ -8,14 +8,17 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.example.nervousco.AccReading;
-import com.example.nervousco.LightReading;
-import com.example.nervousco.Reading;
+import ch.ethz.soms.nervous.competition.model.AccReading;
+import ch.ethz.soms.nervous.competition.model.LightReading;
+import ch.ethz.soms.nervous.competition.model.NoiseReading;
+import ch.ethz.soms.nervous.competition.model.Reading;
+
 
 public class Competition {
 
 	public final static int COMPETITION_TYPE_ACCELEROMETER = 0;
 	public final static int COMPETITION_TYPE_LIGHT = 1;
+	public final static int COMPETITION_TYPE_NOISE = 2;
 
 	public int COMPETITION_TYPE = COMPETITION_TYPE_ACCELEROMETER;
 
@@ -27,6 +30,9 @@ public class Competition {
 	LightReading[] lastLightReadings = new LightReading[] {
 			new LightReading(0, 0, 0), new LightReading(0, 0, 0) };
 
+	NoiseReading[] lastNoiseReadings = new NoiseReading[] {
+			new NoiseReading(0, 0, 0), new NoiseReading(0, 0, 0) };
+	
 	Hashtable<String, Reading> hUniquePlayersRedTeam = new Hashtable<String, Reading>(); // key is the android_id
 														// and value is the last
 														// reading
@@ -95,6 +101,32 @@ public class Competition {
 		
 		// }
 	}
+	
+	public synchronized void pushReading(NoiseReading r) {
+		readings.add(r);
+
+		lastNoiseReadings[r.team] = r;
+
+		
+		if (r.team == 0) {
+			hUniquePlayersGreenTeam.put(r.android_id, r);
+
+			if (hUniquePlayersRedTeam.containsKey(r.android_id))
+				hUniquePlayersRedTeam.remove(r.android_id);
+		} else {
+			hUniquePlayersRedTeam.put(r.android_id, r);
+
+			if (hUniquePlayersGreenTeam.containsKey(r.android_id))
+				hUniquePlayersGreenTeam.remove(r.android_id);
+		}
+		
+		int t = r.team;
+
+		// for (int t = 0; t <= 1; t++) {
+		team[t] += lastNoiseReadings[t].soundVal;
+		
+		// }
+	}
 
 	public synchronized double getScore() {
 		if (team[0] + team[1] == 0) {
@@ -157,6 +189,14 @@ public class Competition {
 					teamScore[0] += lightR.lightVal;
 					
 				}
+			}else if(COMPETITION_TYPE == COMPETITION_TYPE_NOISE){
+				if(r instanceof NoiseReading){
+					NoiseReading noiseR = (NoiseReading) r;
+					
+					if(noiseR.team == 0)
+					teamScore[0] += noiseR.soundVal;
+					
+				}
 			}
 		
 		}
@@ -182,6 +222,14 @@ Enumeration<Reading> e2 = hUniquePlayersRedTeam.elements();
 					
 					if(lightR.team == 1)
 					teamScore[1] += lightR.lightVal;
+					
+				}
+			}else if(COMPETITION_TYPE == COMPETITION_TYPE_NOISE){
+				if(r instanceof NoiseReading){
+					NoiseReading noiseR = (NoiseReading) r;
+					
+					if(noiseR.team == 1)
+					teamScore[1] += noiseR.soundVal;
 					
 				}
 			}

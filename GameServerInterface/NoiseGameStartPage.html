@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Planetary Nervous competition - Noise Sensor</title>
+    <script src="libs/justgage/justgage.1.0.1.min.js"></script>
+    <script src="libs/justgage/raphael.2.1.0.min.js"></script>
+    <script src="libs/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="script/smoothie.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+    <link href="style.css" type="text/css" rel="stylesheet">
+
+</head>
+
+<body bgcolor="dodgerblue" onload="initSensor(),getServerDetails()">
+    <div id="main">
+        <h1><b>Planetary Nervous Competition</b></h1>
+        <h3>Noise Sensor</h3>
+        <div id="content">
+            <h2>
+            <div id="server_details">
+                <br><br>
+            </div>
+                </h2>
+            <div id="start_container">
+                <img id="start" src="images/start.png">
+                <br>Start
+            </div>
+            <div id="gauge"></div>
+            <div id="timer_container">
+                <img id="timer" src="images/timer.png">
+                <br> <span>00:30</span>
+            </div>
+            <div class="winningLabel">
+                <br>
+            </div>
+        </div>
+        <canvas id="sensor" width="1400" height="300"></canvas>
+        <label style=" font-weight: bold;">Sensor Values</label>
+
+        <br>
+        <label style=" font-weight: bold;">Time</label>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <script>
+        $("#gauge").css("width", $(window).width() * 0.6);
+        $("#gauge").css("height", $(window).width() * 0.6 / 1.25);
+        $("#gauge").css("top", $(window).height() * 0.5);
+        $("#timer_container").css("top", $(window).height() * 0.5);
+        $("#timer_container").css("right", $(window).width() * 0.085);
+        $("#start_container").css("top", $(window).height() * 0.5);
+        $("#start_container").css("left", $(window).width() * 0.085);
+
+        var g = new JustGage({
+            id: "gauge",
+            value: "",
+            valueFontColor: "dodgerblue",
+            labelFontColor: "dodgerblue",
+            showInnerShadow: true,
+            shadowOpacity: 1,
+            min: 0,
+            max: 100,
+            value: 50,
+            title: " ",
+            gaugeColor: "#00FF00",
+            levelColors: ['#FF0000'],
+        });
+        var rem_secs = 30;
+        var refresh_rate = 500;
+        var timer;
+
+        /* var address = "http://nervouscomp.hopper.pw"; */
+        var address = "http://127.0.0.1";
+
+        var reset_url = address + ":6060/";
+        var data_url = address + ":7072/";
+        var server_details_url = address + ":7170/";
+        var end_url = address + ":9090/";
+
+        function getServerDetails() {
+            $.getJSON(server_details_url, function (data) {
+                var SERVER_IP = data;
+
+                var s = document.getElementById("server_details");
+                s.innerHTML = "Server IP: " + SERVER_IP + " <br>Port: 8080";
+            }).error(function () {
+                var s = document.getElementById("server_details");
+                s.innerHTML = "Server not running";
+            });
+        }
+        var sensorTimeLine;
+        var sensorDataSets;
+
+        function initSensor() {
+
+            sensorTimeLine =
+                new SmoothieChart({
+                    timestampFormatter: SmoothieChart.timeFormatter,
+                    millisPerPixel: 30,
+                    grid: {
+                        strokeStyle: '#555555',
+                        lineWidth: 1,
+                        millisPerLine: 5000,
+                        verticalSections: 10
+                    },
+                    labels: {
+                        fillStyle: 'rgba(255,255,255,0.62)',
+                        fontSize: 20,
+                        precision: 4
+                    }
+                });
+
+            var seriesOptions = [
+                {
+                    strokeStyle: 'rgba(255, 0, 0, 1)',
+                    fillStyle: 'rgba(255, 0, 0, 0.1)',
+                    lineWidth: 3
+    }, {
+                    strokeStyle: 'rgba(0, 255, 0, 1)',
+                    fillStyle: 'rgba(0, 255, 0, 0.1)',
+                    lineWidth: 3
+                }];
+
+            // Initialize an empty TimeSeries for each Sensor.
+            sensorDataSets = [new TimeSeries(), new TimeSeries()];
+            /*
+            var now = new Date().getTime();
+            for (var t = now - 1000 * 50; t <= now; t += 1000) {
+                addRandomValueToDataSets(t, sensorDataSets);
+            }
+             Every second, simulate a new set of readings being taken from each CPU.
+            setInterval(function () {
+                addRandomValueToDataSets(new Date().getTime(), sensorDataSets);
+            }, 1000);*/
+
+            for (var i = 0; i < sensorDataSets.length; i++) {
+                sensorTimeLine.addTimeSeries(sensorDataSets[i], seriesOptions[i]);
+            }
+
+            sensorTimeLine.streamTo(document.getElementById('sensor'), 1000);
+        }
+
+        function addValueToDataSets(time, values) {
+            if (values[3] == 1) {
+                sensorDataSets[0].append(time, values[2]);
+                sensorDataSets[1].append(time, values[1]);
+            }
+        }
+
+        function clearGraphValues() {
+            sensorDataSets[0].clear();
+            sensorDataSets[1].clear();
+        }
+
+
+        var gameRunning = false;
+
+        function onStartClicked() {
+            runChart();
+            $.getJSON(reset_url, function (data) {
+                g.refresh(100);
+                rem_secs = data;
+
+                console.log("reset");
+
+                $("#start_container").css("opacity", "0.5");
+                //        $("h1").css("color","initial");
+                timer = setInterval(function () {
+                    $.getJSON(data_url, updateBar);
+                }, refresh_rate);
+
+                document.getElementById("start_container").removeEventListener(
+                    "click", onStartClicked);
+            });
+        }
+
+        function updateBar(values) {
+            console.log("inside updateBar ");
+
+            var value = values[0];
+            addValueToDataSets(new Date().getTime(), values);
+            rem_secs -= refresh_rate / 1000;
+            if (rem_secs <= 0.1) {
+                rem_secs = 0;
+            }
+            secs = Math.ceil(rem_secs);
+
+            if (secs == 0) {
+                stopChart();
+                clearInterval(timer);
+                if (value < 50) {
+                    //team A winning
+                    $(".winningLabel").text("A won!");
+                    $(".winningLabel").css("color", '#00FF00');
+                } else if (value == 50) {
+                    //tie
+                    $(".winningLabel").text("TIE!");
+                    $(".winningLabel").css("color", "#FFFFFF");
+                } else {
+                    //team B winning
+                    $(".winningLabel").text("B won!");
+                    $(".winningLabel").css("color", '#FF0000');
+                }
+                $("#start_container").css("opacity", "1");
+                document.getElementById("start_container").addEventListener(
+                    "click", onStartClicked);
+                $.getJSON(end_url);
+            } else {
+                if (value < 50) {
+                    //team A winning85A137
+                    $(".winningLabel").text("A");
+                    $(".winningLabel").css("color", '#00FF00');
+                } else if (value == 50) {
+                    //tie
+                    $(".winningLabel").text("TIE");
+                    $(".winningLabel").css("color", "#FFFFFF");
+                } else {
+                    //team B winning
+                    $(".winningLabel").text("B");
+                    $(".winningLabel").css("color", '#FF0000');
+                }
+            }
+            g.refresh(value);
+            var shownSecs = secs % 60;
+            if (shownSecs < 10)
+                $("#timer_container span").text(
+                    "" + parseInt(secs / 60) + ":0" + shownSecs);
+            else
+                $("#timer_container span").text(
+                    "" + parseInt(secs / 60) + ":" + shownSecs);
+        }
+
+        function stopChart() {
+            sensorTimeLine.stop();
+            clearGraphValues();
+        }
+
+        function runChart() {
+            sensorTimeLine.start();
+        }
+        document.getElementById("start_container").addEventListener("click",
+            onStartClicked);
+    </script>
+</body>
+
+</html>

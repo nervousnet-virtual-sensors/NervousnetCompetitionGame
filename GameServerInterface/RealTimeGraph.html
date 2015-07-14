@@ -45,7 +45,7 @@
 
         var reset_url = address + ":6060/";
         var data_url = address + ":7171/";
-        var server_details_url = address + ":7272/";
+        var server_details_url = address + ":7170/";
         var end_url = address + ":9090/";
 
         var rem_secs = 100;
@@ -122,9 +122,10 @@
 
             if (values[3] == 0)
                 s.innerHTML = "Accelerometer<br><br>";
-            else
+            else if (values[3] == 1)
                 s.innerHTML = "Light<br><br>";
-
+            else if (values[3] == 2)
+                s.innerHTML = "Noise<br><br>";
 
             if (values[2] >= 0)
                 sensorDataSets[0].append(time, values[2]);

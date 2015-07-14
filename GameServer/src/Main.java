@@ -7,22 +7,28 @@ public class Main {
 	public static int playDuration = 1;
 
 	public static int compResetPort = 6060;
-	public static int javascriptServerDetailsPort = 7272;
+	public static int javascriptServerDetailsPort = 7170;
+	public static int javascriptRealTimeDataPort = 7171;
 	public static int javascriptPortAcc = 7070;
-	public static int javascriptPortLight = 7171;
+	public static int javascriptPortLight = 7071;
+	public static int javascriptPortNoise = 7072;
 	public static int smartphonesPort = 8080;
 	public static int compEndPort = 9090;
 	public static int contestDuration = 30;
 
 	public static void main(String[] args) throws Exception {
 
-		ServerSocket javascriptAppAcc = null, javascriptAppLight = null, javascriptServerDetails = null, androidApp = null, compReset = null, compEnd = null;
+		ServerSocket javascriptAppAcc = null, javascriptAppLight = null, javascriptAppNoise = null, javascriptServerDetails = null, javascriptRealTime= null, androidApp = null, compReset = null, compEnd = null;
 
 		try {
 			javascriptServerDetails = new ServerSocket(
 					javascriptServerDetailsPort);
+			javascriptRealTime = new ServerSocket(
+					javascriptRealTimeDataPort);
 			javascriptAppAcc = new ServerSocket(javascriptPortAcc);
 			javascriptAppLight = new ServerSocket(javascriptPortLight);
+			javascriptAppNoise = new ServerSocket(javascriptPortNoise);
+
 			androidApp = new ServerSocket(smartphonesPort);
 			compReset = new ServerSocket(compResetPort);
 			compEnd = new ServerSocket(compEndPort);
@@ -31,7 +37,7 @@ public class Main {
 			Competition comp = new Competition();
 			CompetitionDAO dao = new CompetitionDAO();
 
-			AccReadingListener accReadingListener = new AccReadingListener(
+			ReadingListener accReadingListener = new ReadingListener(
 					androidApp, comp);
 			new Thread(accReadingListener).start();
 
@@ -39,6 +45,10 @@ public class Main {
 					javascriptServerDetails, comp);
 			new Thread(jsServerDetailsRequestHandlerAcc).start();
 
+			JsRequestHandler jsRequestHandler = new JsRequestHandler(
+					javascriptRealTime, comp);
+			new Thread(jsRequestHandler).start();
+			
 			JsRequestHandler jsRequestHandlerAcc = new JsRequestHandler(
 					javascriptAppAcc, comp);
 			new Thread(jsRequestHandlerAcc).start();
@@ -46,6 +56,10 @@ public class Main {
 			JsRequestHandler jsRequestHandlerLight = new JsRequestHandler(
 					javascriptAppLight, comp);
 			new Thread(jsRequestHandlerLight).start();
+
+			JsRequestHandler jsRequestHandlerNoise = new JsRequestHandler(
+					javascriptAppNoise, comp);
+			new Thread(jsRequestHandlerNoise).start();
 
 			CompEndHandler compEndHandler = new CompEndHandler(compEnd, comp,
 					player, dao, playDuration);
@@ -58,8 +72,10 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 			javascriptServerDetails.close();
+			javascriptRealTime.close();
 			javascriptAppAcc.close();
 			javascriptAppLight.close();
+			javascriptAppNoise.close();
 			androidApp.close();
 			return;
 		}

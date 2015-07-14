@@ -7,9 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.example.nervousco.AccReading;
-import com.example.nervousco.LightReading;
-import com.example.nervousco.Reading;
+import ch.ethz.soms.nervous.competition.model.AccReading;
+import ch.ethz.soms.nervous.competition.model.LightReading;
+import ch.ethz.soms.nervous.competition.model.NoiseReading;
+import ch.ethz.soms.nervous.competition.model.Reading;
 
 class CompetitionDAO {
 

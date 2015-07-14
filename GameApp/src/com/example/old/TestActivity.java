@@ -2,9 +2,9 @@ package com.example.old;
 
 import java.io.IOException;
 
-import com.example.nervousco.AccReading;
-import com.example.nervousco.LightReading;
-import com.example.nervousco.SynchWriter;
+import ch.ethz.soms.nervous.competition.SynchWriter;
+import ch.ethz.soms.nervous.competition.model.AccReading;
+import ch.ethz.soms.nervous.competition.model.LightReading;
 
 import android.os.Bundle;
 import android.util.Log;
