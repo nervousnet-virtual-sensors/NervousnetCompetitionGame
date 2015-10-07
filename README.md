@@ -1,7 +1,7 @@
 # NervousCompetitionGame
 <b>Requirements:</b><br>
 1. Java should be installed on your PC / Laptop to run the server.<br>
-2. Android mobile phones to install the client app.<br>
+2. Android mobile phones to install the client app.<br><br>
 <b>How to run the competition:</b><br>
  <b>Step 1: Run the server.</b><br>
       a. Download a released version of the NervousNetCompetitionGame Project from:<br>
