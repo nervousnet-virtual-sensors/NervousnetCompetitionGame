@@ -58,7 +58,7 @@ public class SensorService implements SensorEventListener, NoiseListener {
 	
 	@Override
 	public void noiseSensorDataReady(long timestamp, float rms, float spl, float[] bands) {
-		noiseReading = new NoiseReading(rms,timestamp,team);
+		noiseReading = new NoiseReading(spl,timestamp,team);
 		Log.d(DEBUG_TAG, "Noise data collected");
 	}
 	
