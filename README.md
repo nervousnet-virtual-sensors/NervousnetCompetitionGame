@@ -7,7 +7,7 @@
       a. Download a released version of the NervousNetCompetitionGame Project from:<br>
 https://github.com/nervousnet-virtual-sensors/NervousnetCompetitionGame/releases<br>
 b. Unzip the files to a local folder.<br>
-c. Run the GameServer.jar file which is present inside the GameServer folder.<br><br>
+c. Run the GameServer.jar file which is present inside the Deliverables folder.<br><br>
         
 <b> Step 2: Install the NervousNet Competition Mobile app on the Mobile device.</b><br>
         a. Download the app from {https://play.google.com/store/apps/details?id=ch.ethz.coss.nervous.competition}<br>
