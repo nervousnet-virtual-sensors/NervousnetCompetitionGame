@@ -238,7 +238,7 @@ Enumeration<Reading> e2 = hUniquePlayersRedTeam.elements();
 		}
 
 		
-		System.out.println("GREEEN TEAM -- "+teamScore[0]+", RED TEAM -- "+teamScore[1]);
+//		System.out.println("GREEEN TEAM -- "+teamScore[0]+", RED TEAM -- "+teamScore[1]);
 		return teamScore;
 	}
 
